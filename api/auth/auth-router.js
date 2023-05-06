@@ -1,5 +1,8 @@
 const router = require('express').Router();
 
+// needs: restricted middleware, router, bcrypt, jwt, secret, User
+
+// '/api/auth/register'
 router.post('/register', (req, res) => {
   res.end('implement register, please!');
   /*
