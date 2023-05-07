@@ -1,7 +1,4 @@
-const User = require('../users/users-model')
-
-
-
+const User = require('../users/users-model');
 
 /*
     3- On FAILED registration due to `username` or `password` missing from the request body,
@@ -13,7 +10,6 @@ const User = require('../users/users-model')
 
 
 function checkPayload(req, res, next) {
-    console.log('running thru checkPayload')
     const { username, password } = req.body;
     if (!username || !password) {
         res.status(400).json('username and password required');
@@ -23,11 +19,9 @@ function checkPayload(req, res, next) {
 }
 
 async function checkUsernameAvailable(req, res, next) {
-    console.log('running thru checkUsernameAvailable')
     try {
         const { username } = req.body;
         const user = await User.getBy({ username });
-        console.log(user);
         if (user) {
             res.status(400).json('username taken');
         } else {
@@ -38,9 +32,24 @@ async function checkUsernameAvailable(req, res, next) {
     }
 }
 
+async function checkUsernameExists(req, res, next) {
+    console.log('running thru checkUsernameExists')
+    try {
+        const { username } = req.body;
+        const user = await User.getBy({username});
+        if(!user) {
+            res.status(400).json('invalid credentials');
+        } else {
+            next();
+        }
+    } catch(err) {
+        next(err);
+    }
+}
 
 
 module.exports = {
     checkUsernameAvailable,
-    checkPayload
+    checkPayload,
+    checkUsernameExists
 }
